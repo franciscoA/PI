@@ -1,0 +1,17 @@
+c:\users\hj\documents\visual studio 2012\Projects\TrelloApp\TrelloApp\bin\Debug\TrelloApp.exe.config
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\TrelloApp.exe.config
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\obj\Debug\TrelloApp.csprojResolveAssemblyReference.cache
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\TrelloApp.exe
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\TrelloApp.pdb
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\WebGarten2.dll
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\System.Web.Http.SelfHost.dll
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\System.Web.Http.dll
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\Newtonsoft.Json.dll
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\WebGarten2.pdb
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\System.Web.Http.SelfHost.xml
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\System.Web.Http.xml
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\bin\Debug\Newtonsoft.Json.xml
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\obj\Debug\TrelloApp.exe
+C:\Users\hj\Desktop\fac\semestre actual\PI\Trello\TrelloApp\TrelloApp\obj\Debug\TrelloApp.pdb
