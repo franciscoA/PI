@@ -6,9 +6,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrelloApp", "TrelloApp\Trel
 		{7CFC4BB7-9673-4082-9806-893F3EFC5DFC} = {7CFC4BB7-9673-4082-9806-893F3EFC5DFC}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGarten2", "..\..\isel-leic-pi-WebGarten2-2adad4f\WebGarten2\WebGarten2.csproj", "{7CFC4BB7-9673-4082-9806-893F3EFC5DFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGarten2", "..\..\..\..\Desktop\fac\semestre actual\PI\isel-leic-pi-WebGarten2-2adad4f\WebGarten2\WebGarten2.csproj", "{7CFC4BB7-9673-4082-9806-893F3EFC5DFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGarten2.Tests", "..\..\isel-leic-pi-WebGarten2-2adad4f\WebGarten2.Tests\WebGarten2.Tests.csproj", "{B5434F45-1D40-42CF-A78B-CB781E150FF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGarten2.Tests", "..\..\..\..\Desktop\fac\semestre actual\PI\isel-leic-pi-WebGarten2-2adad4f\WebGarten2.Tests\WebGarten2.Tests.csproj", "{B5434F45-1D40-42CF-A78B-CB781E150FF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -17,9 +17,19 @@ namespace TrelloApp.Views
                Li(A(ResolveUri.CreateCard(bid,list.Id),"Create Card")),
                Li(A(ResolveUri.EditList(bid,list.Id),"Edit")),
                Li(A(ResolveUri.SingleBoardUri(bid),"Return to Board: "+bid)),
+               checkRemove(list,bid),
                Ul(
                    list.GetAllCards().Select(td => Li(A(ResolveUri.SingleCardUri(bid, td.Id), td.Id))).ToArray()
                )
                 ){ }
+
+        private static IWritable checkRemove(List list,string bid)
+        {
+            if (list.GetAllCards().Any())
+                return P(Text("Cant Remove - Have Cards"));
+            else
+                return Li(A(ResolveUri.Remove(bid,list.Id), "Remove List"));
+        }
+
     }
 }

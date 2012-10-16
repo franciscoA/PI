@@ -24,10 +24,7 @@ namespace TrelloApp.Controllers
         [HttpMethod("GET", "/boards")]
         public HttpResponseMessage GetAllBoards()
         {
-            return new HttpResponseMessage
-            {
-                Content = new AllBoardsView(_repo.GetAll()).AsHtmlContent()
-            };
+            return SetResponse(new AllBoardsView(_repo.GetAll()).AsHtmlContent());
         }
 
         //ONE BOARD
@@ -35,11 +32,7 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage GetSingleBoard(string bid)
         {
             var td = _repo.GetBoardById(bid);
-            return td == null ? new HttpResponseMessage(HttpStatusCode.NotFound) :
-                new HttpResponseMessage
-                {
-                    Content = new SingleBoardView(td).AsHtmlContent()
-                };
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new NotFoundView().AsHtmlContent()) : SetResponse(new SingleBoardView(td).AsHtmlContent());
         }
 
         //ONE LIST
@@ -47,11 +40,7 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage GetSingleList(string bid,string lid)
         {
             var td = _repo.GetListById(bid,lid);
-            return td == null ? new HttpResponseMessage(HttpStatusCode.NotFound) :
-                new HttpResponseMessage
-                {
-                    Content = new SingleListView(td,bid).AsHtmlContent()
-                };
+            return td == null ? SetResponse(HttpStatusCode.NotFound,new NotFoundView().AsHtmlContent()) : SetResponse(new SingleListView(td,bid).AsHtmlContent());
         }
 
         //ONE CARD
@@ -59,11 +48,7 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage GetSingleCard(string bid, string cid)
         {
             var td = _repo.GetCardById(bid, cid);
-            return td == null ? new HttpResponseMessage(HttpStatusCode.NotFound) :
-                new HttpResponseMessage
-                {
-                    Content = new SingleCardView(td, bid).AsHtmlContent()
-                };
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new NotFoundView().AsHtmlContent()) : SetResponse(new SingleCardView(td, bid).AsHtmlContent());
         }
 
         //ARCHIVE
@@ -80,39 +65,32 @@ namespace TrelloApp.Controllers
         [HttpMethod("GET", "/")]
         public HttpResponseMessage GetRoot()
         {
-            return new HttpResponseMessage{
-                Content = new RootView().AsHtmlContent()
-            };
+            return SetResponse(new RootView().AsHtmlContent());
         }
 
         //CREATE BOARD PAGE
         [HttpMethod("GET", "/create/boards")]
         public HttpResponseMessage CreateBoard()
         {
-            return new HttpResponseMessage
-            {
-                Content = new CreateBoardView().AsHtmlContent()
-            };
+            return SetResponse(new CreateBoardView().AsHtmlContent());
         }
 
         //CREATE LIST PAGE
         [HttpMethod("GET", "/create/boards/{bid}/lists")]
         public HttpResponseMessage CreateList(string bid)
         {
-            return new HttpResponseMessage
-            {
-                Content = new CreateListView(bid).AsHtmlContent()
-            };
+            if(_repo.ContainsBoard(bid))
+                return SetResponse(new  CreateListView(bid).AsHtmlContent());
+            return SetResponse(HttpStatusCode.NotFound,new NotFoundView().AsHtmlContent());
         }
 
         //CREATE CARD PAGE
         [HttpMethod("GET", "/create/boards/{bid}/lists/{lid}/cards")]
         public HttpResponseMessage CreateCard(string bid, string lid)
         {
-            return new HttpResponseMessage
-            {
-                Content = new CreateCardView(bid,lid).AsHtmlContent()
-            };
+            if (_repo.ContainsBoard(bid) && _repo.ContainsList(bid,lid))
+                return SetResponse( new CreateCardView(bid,lid).AsHtmlContent());
+            return SetResponse(HttpStatusCode.NotFound, new NotFoundView().AsHtmlContent());
         }
 
         //EDIT BOARD
@@ -120,11 +98,7 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage EditBoard(string bid)
         {
             var td = _repo.GetBoardById(bid);
-            return td == null ? new HttpResponseMessage(HttpStatusCode.NotFound) :
-                new HttpResponseMessage
-                {
-                    Content = new EditBoardView(td).AsHtmlContent()
-                };
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new NotFoundView().AsHtmlContent()) : SetResponse(new EditBoardView(td).AsHtmlContent());
         }
 
         //POST EDIT BOARD
@@ -132,15 +106,15 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage PostEditBoard(NameValueCollection content,string bid)
         {
             var desc = content["desc"];
-            if (desc == null)
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+            if (!validParams(desc)){
+                return SetResponse(HttpStatusCode.BadRequest, new MissingInfoView().AsHtmlContent());
             }
+
             var td = _repo.GetBoardById(bid);
             td.Description = desc;
-            var resp = new HttpResponseMessage(HttpStatusCode.SeeOther);
-            resp.Headers.Location = new Uri(ResolveUri.SingleBoardUri(td));
-            return resp;
+
+            return SetResponse(HttpStatusCode.SeeOther, ResolveUri.SingleBoardUri(td));
         }
 
         //EDIT LIST
@@ -148,11 +122,7 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage EditBoard(string bid, string lid)
         {
             var td = _repo.GetListById(bid, lid);
-            return td == null ? new HttpResponseMessage(HttpStatusCode.NotFound) :
-                new HttpResponseMessage
-                {
-                    Content = new EditListView(td,bid).AsHtmlContent()
-                };
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new NotFoundView().AsHtmlContent()) : SetResponse(new EditListView(td, bid).AsHtmlContent());
         }
 
         //POST EDIT LIST
@@ -160,14 +130,38 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage PostEditBoard(NameValueCollection content, string bid, string lid)
         {
             var desc = content["desc"];
-            if (desc == null)
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+            if (!validParams(desc)){
+                return SetResponse(HttpStatusCode.BadRequest, new MissingInfoView().AsHtmlContent());
             }
+
             _repo.GetListById(bid, lid).Description = desc;
-            var resp = new HttpResponseMessage(HttpStatusCode.SeeOther);
-            resp.Headers.Location = new Uri(ResolveUri.SingleListUri(bid,lid));
-            return resp;
+
+            return SetResponse(HttpStatusCode.SeeOther, ResolveUri.SingleListUri(bid, lid));
+        }
+
+        //EDIT CARD
+        [HttpMethod("GET", "/edit/boards/{bid}/lists/{lid}/cards/{cid}")]
+        public HttpResponseMessage EditCard(string bid, string lid, string cid)
+        {
+            var td = _repo.GetCardById(bid, cid);
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new NotFoundView().AsHtmlContent()) : SetResponse(new EditCardView(td, bid, lid).AsHtmlContent());
+        }
+
+        //POST EDIT CARD
+        [HttpMethod("POST", "edit/boards/{bid}/lists/{lid}/cards/{cid}")]
+        public HttpResponseMessage PostEditCard(NameValueCollection content, string bid, string lid, string cid)
+        {
+            var desc = content["desc"];
+            var date = content["date"];
+
+            if (!validParams(desc,date)){
+                return SetResponse(HttpStatusCode.BadRequest, new MissingInfoView().AsHtmlContent());
+            }
+
+            _repo.UpdateCard(bid,lid,cid,desc,date);
+
+            return SetResponse(HttpStatusCode.SeeOther, ResolveUri.SingleCardUri(bid, cid));
         }
 
         //MOVE PAGE
@@ -181,13 +175,12 @@ namespace TrelloApp.Controllers
         }
 
         //REMOVE EMPTY LIST
-        [HttpMethod("GET", "/move")]
-        public HttpResponseMessage Remove()
+        [HttpMethod("GET", "/remove/boards/{bid}/lists/{lid}")]
+        public HttpResponseMessage Remove(string bid, string lid)
         {
-            return new HttpResponseMessage
-            {
-                //  Content = new TestView().AsHtmlContent()
-            };
+            if(_repo.ContainsBoard(bid) && _repo.ContainsList(bid,lid) && !(_repo.GetListById(bid,lid).GetAllCards().Any()))
+                return SetResponse(HttpStatusCode.SeeOther,ResolveUri.SingleBoardUri(bid));
+            return SetResponse(HttpStatusCode.BadRequest, new InvalidOperationView("remove a list").AsHtmlContent());
         }
 
         //POST BOARD
@@ -196,15 +189,15 @@ namespace TrelloApp.Controllers
         {
             var desc = content["desc"];
             var id = content["id"];
-            if (id == null || desc == null)
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+            if (!validParams(id,desc)){
+                return SetResponse(HttpStatusCode.BadRequest, new MissingInfoView().AsHtmlContent());
             }
-            var td = new Board(id,desc);
-            _repo.AddBoard(td);
-            var resp = new HttpResponseMessage(HttpStatusCode.SeeOther);
-            resp.Headers.Location = new Uri(ResolveUri.SingleBoardUri(td));
-            return resp;
+            if(!(_repo.AddBoard(id,desc))){
+                return SetResponse(HttpStatusCode.BadRequest, new AlreadyExistsView("Board").AsHtmlContent());
+            }
+
+            return SetResponse(HttpStatusCode.SeeOther, ResolveUri.SingleBoardUri(id));
         }
 
         //POST LIST
@@ -213,15 +206,16 @@ namespace TrelloApp.Controllers
         {
             var desc = content["desc"];
             var id = content["id"];
-            if (id == null || desc == null)
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+
+            if (!validParams(id,desc)){
+                return SetResponse(HttpStatusCode.BadRequest, new MissingInfoView().AsHtmlContent());
             }
-            var board = _repo.GetBoardById(bid);
-            board.AddList(id, desc);
-            var resp = new HttpResponseMessage(HttpStatusCode.SeeOther);
-            resp.Headers.Location = new Uri(ResolveUri.SingleListUri(board.Id,id));
-            return resp;
+            if(!(_repo.GetBoardById(bid).AddList(id, desc)))
+            {
+                return SetResponse(HttpStatusCode.BadRequest, new AlreadyExistsView("List").AsHtmlContent());
+            }
+
+            return SetResponse(HttpStatusCode.SeeOther, ResolveUri.SingleListUri(bid, id));
         }
 
         //POST CARD
@@ -231,20 +225,44 @@ namespace TrelloApp.Controllers
             var desc = content["desc"];
             var id = content["id"];
             var date = content["date"];
-            if (id == null || desc == null || date == null)
+
+            if (!validParams(desc,id,date))
             {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                return SetResponse(HttpStatusCode.BadRequest, new MissingInfoView().AsHtmlContent());
             }
-            var board = _repo.GetBoardById(bid);
-            var card = new Card(id,desc);
-            card.creationDate = DateTime.Today;
-            card.dueDate = DateTime.Parse(date + " 00:00:00");
-            card.listContainer = lid;
-            board.AddCard(card);
-            board.AddCardToList(card, lid);
-            var resp = new HttpResponseMessage(HttpStatusCode.SeeOther);
-            resp.Headers.Location = new Uri(ResolveUri.SingleCardUri(bid,id));
+            if(_repo.GetBoardById(bid).AddCard(id, desc, date, lid)){
+                return SetResponse(HttpStatusCode.BadRequest, new AlreadyExistsView("Card").AsHtmlContent());
+            }
+
+            return SetResponse(HttpStatusCode.SeeOther, ResolveUri.SingleCardUri(bid, id));
+        }
+
+        private bool validParams(params string[] sp)
+        {
+            foreach (string s in sp)
+            {
+                if (s == null || s == "")
+                    return false;
+            }
+            return true;
+        }
+
+        private HttpResponseMessage SetResponse(HttpStatusCode status, string uri)
+        {
+            var resp = new HttpResponseMessage(status);
+            resp.Headers.Location = new Uri(uri);
             return resp;
         }
+
+        private HttpResponseMessage SetResponse(HttpContent view)
+        {
+            return new HttpResponseMessage { Content = view };
+        }
+
+        private HttpResponseMessage SetResponse(HttpStatusCode status, HttpContent view)
+        {
+            return new HttpResponseMessage(status) { Content = view };
+        }
+
     }
 }

@@ -12,6 +12,10 @@ namespace TrelloApp.Models
         Board GetBoardById(string id);
         List GetListById(string bid, string lid);
         Card GetCardById(string bid, string cid);
-        void AddBoard(Board td);
+        Card GetCardByList(string bid, string list, string cid);
+        bool AddBoard(string bid, string desc);
+        bool ContainsBoard(string bid);
+        bool ContainsList(string bid, string lid);
+        void UpdateCard(string bid, string lid, string cid, string desc, string date);
     }
 }

@@ -55,11 +55,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResolveUri.cs" />
     <Compile Include="Views\AllBoardsView.cs" />
+    <Compile Include="Views\AlreadyExistsView.cs" />
     <Compile Include="Views\CreateBoardView.cs" />
     <Compile Include="Views\CreateCardView.cs" />
     <Compile Include="Views\CreateListView.cs" />
     <Compile Include="Views\EditBoardView.cs" />
+    <Compile Include="Views\EditCardView.cs" />
     <Compile Include="Views\EditListView.cs" />
+    <Compile Include="Views\InvalidOperationView.cs" />
+    <Compile Include="Views\MissingInfoView.cs" />
+    <Compile Include="Views\NotFoundView.cs" />
     <Compile Include="Views\RootView.cs" />
     <Compile Include="Views\SingleBoardView.cs" />
     <Compile Include="Views\SingleCardView.cs" />
@@ -69,12 +74,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\isel-leic-pi-WebGarten2-2adad4f\WebGarten2\WebGarten2.csproj">
+    <ProjectReference Include="..\..\..\..\..\Desktop\fac\semestre actual\PI\isel-leic-pi-WebGarten2-2adad4f\WebGarten2.Tests\WebGarten2.Tests.csproj">
+      <Project>{b5434f45-1d40-42cf-a78b-cb781e150ff9}</Project>
+      <Name>WebGarten2.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Desktop\fac\semestre actual\PI\isel-leic-pi-WebGarten2-2adad4f\WebGarten2\WebGarten2.csproj">
       <Project>{7cfc4bb7-9673-4082-9806-893f3efc5dfc}</Project>
       <Name>WebGarten2</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

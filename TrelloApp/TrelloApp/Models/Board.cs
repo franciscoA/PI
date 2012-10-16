@@ -16,17 +16,29 @@ namespace TrelloApp.Models
             return lists.Values;
         }
 
-        public void AddList(string lid, string desc)
+        public bool AddList(string lid, string desc)
         {
-            lists.Add(lid,new List(lid, desc));
+            if (lists.ContainsKey(lid))
+                return false;
+            else
+                lists.Add(lid,new List(lid, desc));
+            return true;
         }
 
-        public void AddCard(Card c)
+        public bool AddCard(string cid, string desc, string date, string lid)
         {
-            cards.Add(c.Id,c);
+            if (cards.ContainsKey(cid))
+                return false;
+            Card c = new Card(cid, desc);
+            c.creationDate = DateTime.Today;
+            c.dueDate = DateTime.Parse(date + " 00:00:00");
+            c.listContainer = lid;
+            cards.Add(c.Id, c);
+            AddCardToList(c, lid);
+            return true;
         }
 
-        public void AddCardToList(Card c, string lid)
+        private void AddCardToList(Card c, string lid)
         {
             GetListById(lid).AddCard(c);
         }

@@ -84,16 +84,22 @@ namespace TrelloApp
 
         public static string Move(string b, string l, string c)
         {
-            return string.Format("http://localhost:8080/move/boards/{0}/list/{1}/cards/{2}", b, l, c);
+            return string.Format("http://localhost:8080/move/boards/{0}/lists/{1}/cards/{2}", b, l, c);
         }
 
         //ARCHIVE URI
 
         public static string Archive(string b, string l, string c)
         {
-            return string.Format("http://localhost:8080/archive/boards/{0}/list/{1}/cards/{2}", b, l, c);
+            return string.Format("http://localhost:8080/archive/boards/{0}/lists/{1}/cards/{2}", b, l, c);
         }
 
+        //REMOVE
+
+        public static string Remove(string b, string l)
+        {
+            return string.Format("http://localhost:8080/remove/boards/{0}/lists/{1}", b, , l);
+        }
         
     }
 }

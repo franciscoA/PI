@@ -20,7 +20,7 @@ namespace TrelloApp.Models
             cards.Add(c.Id, c);
         }
 
-        public Card GetListById(string cid)
+        public Card GetCardById(string cid)
         {
             Card c = null;
             cards.TryGetValue(cid, out c);
