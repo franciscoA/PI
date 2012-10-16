@@ -16,6 +16,21 @@ namespace TrelloApp.Models
             return lists.Values;
         }
 
+        public void AddList(string lid, string desc)
+        {
+            lists.Add(lid,new List(lid, desc));
+        }
+
+        public void AddCard(Card c)
+        {
+            cards.Add(c.Id,c);
+        }
+
+        public void AddCardToList(Card c, string lid)
+        {
+            GetListById(lid).AddCard(c);
+        }
+
         public List GetListById(string lid)
         {
             List l = null;
@@ -23,14 +38,22 @@ namespace TrelloApp.Models
             return l;
         }
 
+        public Card GetCardById(string cid)
+        {
+            Card c = null;
+            cards.TryGetValue(cid, out c);
+            return c;
+        }
+
         public IEnumerable<Card> GetAllCards()
         {
             return cards.Values;
         }
 
-        public Board(string id)
+        public Board(string id, string desc)
         {
             this.Id = id;
+            this.Description = desc;
         }
     }
 }

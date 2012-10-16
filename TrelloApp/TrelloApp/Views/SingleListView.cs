@@ -12,11 +12,11 @@ namespace TrelloApp.Views
         public SingleListView(List list,string bid)
             : base("TrelloApp",
                H1(Text("List: "+list.Id)),
-               A(ResolveUri.RootUri,"HomePage"),
-               A(ResolveUri.CreateCard,"Create Card"),
-               A(ResolveUri.EditList,"Edit"),
-               A(ResolveUri.MoveList,"Move"),
-               A(ResolveUri.SingleBoardUri(bid),"Return to Board: "+bid),
+               P(Text("Description: "+list.Description)),
+               Li(A(ResolveUri.RootUri,"HomePage")),
+               Li(A(ResolveUri.CreateCard(bid,list.Id),"Create Card")),
+               Li(A(ResolveUri.EditList(bid,list.Id),"Edit")),
+               Li(A(ResolveUri.SingleBoardUri(bid),"Return to Board: "+bid)),
                Ul(
                    list.GetAllCards().Select(td => Li(A(ResolveUri.SingleCardUri(bid, td.Id), td.Id))).ToArray()
                )

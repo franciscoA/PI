@@ -1,9 +1,15 @@
 ﻿using TrelloApp.Models;
+using System.Collections.Generic;
+using System.Linq;
+using WebGarten2.Html;
 
 namespace TrelloApp
 {
     static class ResolveUri
     {
+
+        // SINGLE ELEMENTS URIS 
+
         public static string SingleBoardUri(Board b)
         {
             return SingleBoardUri(b.Id);
@@ -14,9 +20,14 @@ namespace TrelloApp
             return string.Format("http://localhost:8080/boards/{0}", b);
         }
 
+        public static string SingleListUri(string bid, string lid)
+        {
+            return string.Format("http://localhost:8080/boards/{0}/lists/{1}", bid, lid);
+        }
+
         public static string SingleListUri(Board b, List l)
         {
-            return string.Format("http://localhost:8080/boards/{0}/lists/{1}", b.Id, l.Id);
+            return SingleListUri(b.Id,l.Id);
         }
 
         public static string SingleCardUri(Board b, Card c)
@@ -29,20 +40,60 @@ namespace TrelloApp
             return string.Format("http://localhost:8080/boards/{0}/cards/{1}", b, c);
         }
 
+        //ROOT URI
+
         public const string RootUri = "http://localhost:8080/";
 
-        public const string CreateBoard = "http://localhost:8080/create/board";
+        //CREATION URIS 
+
+        public const string CreateBoard = "http://localhost:8080/create/boards";
+
+        public static string CreateList(string b)
+        {
+            return string.Format("http://localhost:8080/create/boards/{0}/lists", b);
+        }
+
+        public static string CreateCard(string b, string l)
+        {
+            return string.Format("http://localhost:8080/create/boards/{0}/lists/{1}/cards", b,l);
+        }
+
+        //ALL BOARDS URI (INCLUDES ALL LISTS AND ALL CARDS)
 
         public const string AllBoardsUri = "http://localhost:8080/boards";
 
-        public const string EditBoard = "http://localhost:8080/edit/board";
 
-        public const string EditList = "http://localhost:8080/edit/list";
+        //EDITION URIS
 
-        public const string CreateList = "http://localhost:8080/create/list";
+        public static string EditBoard(string b)
+        {
+            return string.Format("http://localhost:8080/edit/boards/{0}", b);
+        }
 
-        public const string CreateCard = "http://localhost:8080/create/card";
+        public static string EditList(string b, string l)
+        {
+            return string.Format("http://localhost:8080/edit/boards/{0}/lists/{1}", b,l);
+        }
 
-        public const string MoveList = "http://localhost:8080/move/list";
+        public static string EditCard(string b, string l, string c)
+        {
+            return string.Format("http://localhost:8080/edit/boards/{0}/lists/{1}/cards/{2}", b, l, c);
+        }
+
+        //MOVE URI
+
+        public static string Move(string b, string l, string c)
+        {
+            return string.Format("http://localhost:8080/move/boards/{0}/list/{1}/cards/{2}", b, l, c);
+        }
+
+        //ARCHIVE URI
+
+        public static string Archive(string b, string l, string c)
+        {
+            return string.Format("http://localhost:8080/archive/boards/{0}/list/{1}/cards/{2}", b, l, c);
+        }
+
+        
     }
 }

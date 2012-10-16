@@ -8,9 +8,14 @@ namespace TrelloApp.Models
 {
     class Card : Element
     {
-        public Card(string id)
+        public DateTime creationDate { get; set; }
+        public DateTime dueDate { get; set; }
+        public string listContainer { get; set; }
+
+        public Card(string id, string desc)
         {
             this.Id = id;
+            this.Description = desc;
         }
     }
 }

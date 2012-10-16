@@ -14,8 +14,8 @@ namespace TrelloApp.Views
                Ul(
                    t.Select(td => Li(A(ResolveUri.SingleBoardUri(td), td.Id))).ToArray()
                    ),
-                A(ResolveUri.RootUri,"HomePage"),
-                A(ResolveUri.CreateBoard,"Create Board")
+                Li(A(ResolveUri.RootUri,"HomePage")),
+                Li(A(ResolveUri.CreateBoard,"Create Board"))
                 ){ }
     }
 }

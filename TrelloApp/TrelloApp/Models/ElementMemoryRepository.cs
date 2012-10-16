@@ -25,6 +25,13 @@ namespace TrelloApp.Models
             return board.GetListById(lid);
         }
 
+        public Card GetCardById(string bid, string cid)
+        {
+            Board board = null;
+            _repo.TryGetValue(bid, out board);
+            return board.GetCardById(cid);
+        }
+
         public void AddBoard(Board td)
         {
             _repo.Add(td.Id, td);

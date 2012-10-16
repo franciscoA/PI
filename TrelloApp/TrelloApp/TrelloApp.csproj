@@ -55,10 +55,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResolveUri.cs" />
     <Compile Include="Views\AllBoardsView.cs" />
+    <Compile Include="Views\CreateBoardView.cs" />
+    <Compile Include="Views\CreateCardView.cs" />
+    <Compile Include="Views\CreateListView.cs" />
+    <Compile Include="Views\EditBoardView.cs" />
+    <Compile Include="Views\EditListView.cs" />
     <Compile Include="Views\RootView.cs" />
     <Compile Include="Views\SingleBoardView.cs" />
+    <Compile Include="Views\SingleCardView.cs" />
     <Compile Include="Views\SingleListView.cs" />
-    <Compile Include="Views\TestView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

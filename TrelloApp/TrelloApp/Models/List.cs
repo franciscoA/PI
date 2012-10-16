@@ -15,6 +15,11 @@ namespace TrelloApp.Models
             return cards.Values;
         }
 
+        public void AddCard(Card c)
+        {
+            cards.Add(c.Id, c);
+        }
+
         public Card GetListById(string cid)
         {
             Card c = null;
@@ -22,9 +27,10 @@ namespace TrelloApp.Models
             return c;
         }
 
-        public List(string id)
+        public List(string id, string desc)
         {
             this.Id = id;
+            this.Description = desc;
         }
     }
 }
