@@ -15,6 +15,11 @@ namespace TrelloApp.Models
             return cards.Values;
         }
 
+        public void removeCard(string cid)
+        {
+            cards.Remove(cid);
+        }
+
         public void AddCard(Card c)
         {
             cards.Add(c.Id, c);

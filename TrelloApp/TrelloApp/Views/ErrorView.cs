@@ -5,13 +5,12 @@ using System.Text;
 
 namespace TrelloApp.Views
 {
-    class MissingInfoView : HtmlDoc
+    class ErrorView : HtmlDoc
     {
-        public MissingInfoView()
+        public ErrorView(string desc)
             : base("TrelloApp",
                H1(Text("ERROR")),
-               P(Text("One or more parameters are empy, please purchase all info.")),
-               A(ResolveUri.RootUri,"HomePage")
+               P(Text(desc))
                ) { }
     }
 }

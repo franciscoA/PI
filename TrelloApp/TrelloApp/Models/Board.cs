@@ -16,6 +16,11 @@ namespace TrelloApp.Models
             return lists.Values;
         }
 
+        public bool RemoveCard(string cid)
+        {
+            return cards.Remove(cid);
+        }
+
         public bool AddList(string lid, string desc)
         {
             if (lists.ContainsKey(lid))

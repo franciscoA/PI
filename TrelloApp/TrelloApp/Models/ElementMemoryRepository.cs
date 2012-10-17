@@ -6,10 +6,16 @@ namespace TrelloApp.Models
     class ElementMemoryRepository : IElementRepository
     {
         private readonly IDictionary<string, Board> _repo = new Dictionary<string, Board>();
+        private readonly IDictionary<string, Card> _archive = new Dictionary<string, Card>();
 
         public IEnumerable<Board> GetAll()
         {
             return _repo.Values;
+        }
+
+        public IEnumerable<Card> GetArchivedCards()
+        {
+            return _archive.Values;
         }
 
         public Board GetBoardById(string id)
@@ -70,5 +76,31 @@ namespace TrelloApp.Models
                 _repo.Add(td.Id, td);
             return true;
         }
+
+        public bool ArchiveCard(string bid, string cid)
+        {
+            Board board = null;
+            _repo.TryGetValue(bid, out board);
+            if (board != null)
+            {
+                Card c = board.GetCardById(cid);
+                if (c != null)
+                {
+                    _archive.Add(bid + "_" + c.Id, c);
+                    c.listContainer = null;
+                    c.boardContainer = null;
+                    return board.RemoveCard(cid);
+                }
+            }
+            return false;
+        }
+
+        public Card GetArchivedCardById(string id)
+        {
+            Card c = null;
+            _archive.TryGetValue(id, out c);
+            return c;
+        }
+
     }
 }

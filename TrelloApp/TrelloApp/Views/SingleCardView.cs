@@ -8,20 +8,28 @@ namespace TrelloApp.Views
 {
     class SingleCardView : HtmlDoc
     {
-        public SingleCardView(Card card, string bid)
+        public SingleCardView(Card card)
             : base("TrelloApp",
                H1(Text("Card: " + card.Id)),
                P(Text("Description: " + card.Description)),
                P(Text("Creation Date: " + card.creationDate.ToString("d"))),
                P(Text("Due Date: " + card.dueDate.ToString("d"))),
                Li(A(ResolveUri.RootUri, "HomePage")),
-               Li(A(ResolveUri.EditCard(bid,card.listContainer,card.Id), "Edit")),
-               Li(A(ResolveUri.Move(bid,card.listContainer,card.Id), "Move")),
-               Li(A(ResolveUri.Archive(bid,card.listContainer,card.Id), "Archive")),
-               Li(A(ResolveUri.SingleBoardUri(bid), "Return to Board: "+bid)),
-               Li(A(ResolveUri.SingleListUri(bid,card.listContainer), "Return to List: "+card.listContainer))
+               CheckedArchived(card)
+               )
+        { }
 
-                ) { }
-
+        private static IWritable CheckedArchived(Card card)
+        {
+            if (card.archived)
+            {
+                return Ul(Li(A(ResolveUri.EditCard(card.boardContainer, card.listContainer, card.Id), "Edit")),
+                Li(A(ResolveUri.Move(card.boardContainer, card.listContainer, card.Id), "Move")),
+                Li(A(ResolveUri.Archive(card.boardContainer, card.listContainer, card.Id), "Archive")),
+                Li(A(ResolveUri.SingleBoardUri(card.boardContainer), "Return to Board: " + card.boardContainer)),
+                Li(A(ResolveUri.SingleListUri(card.boardContainer, card.listContainer), "Return to List: " + card.listContainer)));
+            }
+            return null;
+        }
     }
 }

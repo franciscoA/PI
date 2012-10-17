@@ -13,7 +13,10 @@ namespace TrelloApp.Models
         List GetListById(string bid, string lid);
         Card GetCardById(string bid, string cid);
         Card GetCardByList(string bid, string list, string cid);
+        IEnumerable<Card> GetArchivedCards();
+        bool ArchiveCard(string bid, string cid);
         bool AddBoard(string bid, string desc);
+        Card GetArchivedCardById(string id);
         bool ContainsBoard(string bid);
         bool ContainsList(string bid, string lid);
         void UpdateCard(string bid, string lid, string cid, string desc, string date);
