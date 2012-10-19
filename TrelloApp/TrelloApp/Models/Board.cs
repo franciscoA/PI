@@ -39,13 +39,13 @@ namespace TrelloApp.Models
             c.dueDate = DateTime.Parse(date + " 00:00:00");
             c.listContainer = lid;
             cards.Add(c.Id, c);
-            AddCardToList(c, lid);
-            return true;
+            return AddCardToList(c, lid);
         }
 
-        private void AddCardToList(Card c, string lid)
+        private bool AddCardToList(Card c, string lid)
         {
-            GetListById(lid).AddCard(c);
+            List temp;
+            return ((temp = GetListById(lid)) != null) ? temp.AddCard(c) : false;
         }
 
         public List GetListById(string lid)

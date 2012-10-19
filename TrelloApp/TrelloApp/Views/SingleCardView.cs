@@ -25,7 +25,7 @@ namespace TrelloApp.Views
             {
                 return Ul(Li(A(ResolveUri.EditCard(card.boardContainer, card.listContainer, card.Id), "Edit")),
                 Li(A(ResolveUri.Move(card.boardContainer, card.listContainer, card.Id), "Move")),
-                Li(A(ResolveUri.Archive(card.boardContainer, card.listContainer, card.Id), "Archive")),
+                Li(A(ResolveUri.Archived(card.boardContainer, card.listContainer, card.Id), "Archive")),
                 Li(A(ResolveUri.SingleBoardUri(card.boardContainer), "Return to Board: " + card.boardContainer)),
                 Li(A(ResolveUri.SingleListUri(card.boardContainer, card.listContainer), "Return to List: " + card.listContainer)));
             }

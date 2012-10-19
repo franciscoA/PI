@@ -87,9 +87,11 @@ namespace TrelloApp
             return string.Format("http://localhost:8080/move/boards/{0}/lists/{1}/cards/{2}", b, l, c);
         }
 
-        //ARCHIVE URI
+        //ARCHIVE URIS
 
-        public static string Archive(string b, string l, string c)
+        public const string Archive ="http://localhost:8080/archive";
+
+        public static string Archived(string b, string l, string c)
         {
             return string.Format("http://localhost:8080/archive/boards/{0}/list/{1}/cards/{2}", b, l, c);
         }

@@ -15,14 +15,13 @@ namespace TrelloApp.Models
             return cards.Values;
         }
 
-        public void removeCard(string cid)
+        public bool AddCard(Card c)
         {
-            cards.Remove(cid);
-        }
-
-        public void AddCard(Card c)
-        {
-            cards.Add(c.Id, c);
+            if (cards.ContainsKey(c.Id))
+                return false;
+            else
+                cards.Add(c.Id, c);
+            return true;
         }
 
         public Card GetCardById(string cid)

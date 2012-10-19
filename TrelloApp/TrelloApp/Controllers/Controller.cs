@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebGarten2;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net;
 using TrelloApp.Views;
 using WebGarten2.Html;
@@ -24,7 +25,7 @@ namespace TrelloApp.Controllers
         [HttpMethod("GET", "/boards")]
         public HttpResponseMessage GetAllBoards()
         {
-            return SetResponse(new AllBoardsView(_repo.GetAll()).AsHtmlContent());
+            return SetResponse(HttpStatusCode.OK,new AllBoardsView(_repo.GetAll()).AsHtmlContent());
         }
 
         //ONE BOARD
@@ -32,7 +33,8 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage GetSingleBoard(string bid)
         {
             var td = _repo.GetBoardById(bid);
-            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent()) : SetResponse(new SingleBoardView(td).AsHtmlContent());
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent())
+                                : SetResponse(HttpStatusCode.OK, new SingleBoardView(td).AsHtmlContent());
         }
 
         //ONE LIST
@@ -40,7 +42,8 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage GetSingleList(string bid,string lid)
         {
             var td = _repo.GetListById(bid,lid);
-            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent()) : SetResponse(new SingleListView(td, bid).AsHtmlContent());
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent())
+                                : SetResponse(HttpStatusCode.OK, new SingleListView(td, bid).AsHtmlContent());
         }
 
         //ONE CARD
@@ -48,14 +51,15 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage GetSingleCard(string bid, string cid)
         {
             var td = _repo.GetCardById(bid, cid);
-            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent()) : SetResponse(new SingleCardView(td).AsHtmlContent());
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent())
+                                : SetResponse(HttpStatusCode.OK, new SingleCardView(td).AsHtmlContent());
         }
 
-        //ARCHIVED
-        [HttpMethod("GET", "/archive/")]
+        //ARCHIVE
+        [HttpMethod("GET", "/archive")]
         public HttpResponseMessage Archive()
         {
-            return SetResponse(new ArchiveView(_repo.GetArchivedCards()).AsHtmlContent());
+            return SetResponse(HttpStatusCode.OK, new ArchiveView(_repo.GetArchivedCards()).AsHtmlContent());
         }
 
         //ARCHIVED CARD PAGE
@@ -64,24 +68,24 @@ namespace TrelloApp.Controllers
         {
             if(!_repo.ArchiveCard(bid,cid))
             {
-                 return SetResponse(new ErrorView("Error archiving card. Board and/or card not existant.").AsHtmlContent());
+                return SetResponse(HttpStatusCode.OK, new ErrorView("Error archiving card. Board and/or card not existant.").AsHtmlContent());
             }
 
-            return SetResponse(new SingleCardView(_repo.GetArchivedCardById(bid+"_"+cid)).AsHtmlContent());
+            return SetResponse(HttpStatusCode.OK, new SingleCardView(_repo.GetArchivedCardById(bid + "_" + cid)).AsHtmlContent());
         }
 
         //ROOT PAGE
         [HttpMethod("GET", "/")]
         public HttpResponseMessage GetRoot()
         {
-            return SetResponse(new RootView().AsHtmlContent());
+            return SetResponse(HttpStatusCode.OK, new RootView().AsHtmlContent());
         }
 
         //CREATE BOARD PAGE
         [HttpMethod("GET", "/create/boards")]
         public HttpResponseMessage CreateBoard()
         {
-            return SetResponse(new CreateBoardView().AsHtmlContent());
+            return SetResponse(HttpStatusCode.OK, new CreateBoardView().AsHtmlContent());
         }
 
         //CREATE LIST PAGE
@@ -89,7 +93,7 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage CreateList(string bid)
         {
             if(_repo.ContainsBoard(bid))
-                return SetResponse(new  CreateListView(bid).AsHtmlContent());
+                return SetResponse(HttpStatusCode.OK, new CreateListView(bid).AsHtmlContent());
             return SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent());
         }
 
@@ -98,7 +102,7 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage CreateCard(string bid, string lid)
         {
             if (_repo.ContainsBoard(bid) && _repo.ContainsList(bid,lid))
-                return SetResponse( new CreateCardView(bid,lid).AsHtmlContent());
+                return SetResponse(HttpStatusCode.OK, new CreateCardView(bid, lid).AsHtmlContent());
             return SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent());
         }
 
@@ -107,7 +111,8 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage EditBoard(string bid)
         {
             var td = _repo.GetBoardById(bid);
-            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent()) : SetResponse(new EditBoardView(td).AsHtmlContent());
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent())
+                            : SetResponse(HttpStatusCode.OK, new EditBoardView(td).AsHtmlContent());
         }
 
         //POST EDIT BOARD
@@ -131,7 +136,8 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage EditBoard(string bid, string lid)
         {
             var td = _repo.GetListById(bid, lid);
-            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent()) : SetResponse(new EditListView(td, bid).AsHtmlContent());
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent())
+                            : SetResponse(HttpStatusCode.OK, new EditListView(td, bid).AsHtmlContent());
         }
 
         //POST EDIT LIST
@@ -154,7 +160,8 @@ namespace TrelloApp.Controllers
         public HttpResponseMessage EditCard(string bid, string lid, string cid)
         {
             var td = _repo.GetCardById(bid, cid);
-            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent()) : SetResponse(new EditCardView(td, bid, lid).AsHtmlContent());
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent())
+                                : SetResponse(HttpStatusCode.OK, new EditCardView(td, bid, lid).AsHtmlContent());
         }
 
         //POST EDIT CARD
@@ -263,15 +270,16 @@ namespace TrelloApp.Controllers
             return resp;
         }
 
-        private HttpResponseMessage SetResponse(HttpContent view)
-        {
-            return new HttpResponseMessage { Content = view };
-        }
-
         private HttpResponseMessage SetResponse(HttpStatusCode status, HttpContent view)
         {
-            return new HttpResponseMessage(status) { Content = view };
+            HttpResponseMessage resp = new HttpResponseMessage(status) { Content = view };
+           // AddResponseHeaders(resp.Content);
+            return resp;
         }
 
+   /*     private void AddResponseHeaders(HttpContent respContent)
+        {
+            respContent.Headers.Add("Last-Modified", DateTime.Today.ToString());
+        }*/
     }
 }

@@ -19,6 +19,6 @@ namespace TrelloApp.Models
         Card GetArchivedCardById(string id);
         bool ContainsBoard(string bid);
         bool ContainsList(string bid, string lid);
-        void UpdateCard(string bid, string lid, string cid, string desc, string date);
+        bool UpdateCard(string bid, string lid, string cid, string desc, string date);
     }
 }
