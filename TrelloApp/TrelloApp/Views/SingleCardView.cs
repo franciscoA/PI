@@ -21,15 +21,15 @@ namespace TrelloApp.Views
 
         private static IWritable CheckedArchived(Card card)
         {
-            if (card.archived)
+            if (!card.archived)
             {
                 return Ul(Li(A(ResolveUri.EditCard(card.boardContainer, card.listContainer, card.Id), "Edit")),
                 Li(A(ResolveUri.Move(card.boardContainer, card.listContainer, card.Id), "Move")),
-                Li(A(ResolveUri.Archived(card.boardContainer, card.listContainer, card.Id), "Archive")),
+                Li(A(ResolveUri.Archived(card.boardContainer, card.Id), "Archive")),
                 Li(A(ResolveUri.SingleBoardUri(card.boardContainer), "Return to Board: " + card.boardContainer)),
                 Li(A(ResolveUri.SingleListUri(card.boardContainer, card.listContainer), "Return to List: " + card.listContainer)));
             }
-            return null;
+            return P(Text("Archived"));
         }
     }
 }

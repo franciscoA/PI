@@ -25,7 +25,7 @@ namespace TrelloApp.Controllers
         [HttpMethod("GET", "/boards")]
         public HttpResponseMessage GetAllBoards()
         {
-            return SetResponse(HttpStatusCode.OK,new AllBoardsView(_repo.GetAll()).AsHtmlContent());
+            return SetResponse(HttpStatusCode.OK,new AllBoardsView(_repo.GetAll().Cast<Board>()).AsHtmlContent());
         }
 
         //ONE BOARD
@@ -59,7 +59,7 @@ namespace TrelloApp.Controllers
         [HttpMethod("GET", "/archive")]
         public HttpResponseMessage Archive()
         {
-            return SetResponse(HttpStatusCode.OK, new ArchiveView(_repo.GetArchivedCards()).AsHtmlContent());
+            return SetResponse(HttpStatusCode.OK, new ArchiveView(_repo.GetArchivedCards().Cast<Card>()).AsHtmlContent());
         }
 
         //ARCHIVED CARD PAGE
@@ -181,21 +181,54 @@ namespace TrelloApp.Controllers
         }
 
         //MOVE PAGE
-        [HttpMethod("GET", "/move")]
-        public HttpResponseMessage Move()
+        [HttpMethod("GET", "/move/boards/{bid}/lists/{lid}/cards/{cid}")]
+        public HttpResponseMessage Move(string bid, string lid, string cid)
         {
-            return new HttpResponseMessage
+            var td = _repo.GetCardById(bid, cid);
+            return td == null ? SetResponse(HttpStatusCode.NotFound, new ErrorView("Oups, that resource doesnt exist.").AsHtmlContent())
+                                : SetResponse(HttpStatusCode.OK, new MoveView(bid, lid, cid).AsHtmlContent());
+        }
+
+        //POST MOVE PAGE
+        [HttpMethod("POST", "/move/boards/{bid}/lists/{lid}/cards/{cid}")]
+        public HttpResponseMessage Move(NameValueCollection content, string bid, string lid, string cid)
+        {
+            var list = content["list"];
+            var pos = content["pos"];
+            int position;
+
+            try
             {
-              //  Content = new TestView().AsHtmlContent()
-            };
+                position = Convert.ToInt32(pos);
+                position--;
+                if(position < 0)
+                    throw new OverflowException();
+            }
+            catch (OverflowException)
+            {
+                return SetResponse(HttpStatusCode.BadRequest, new ErrorView("Oups, position number is bigger ou smaller than allowed.").AsHtmlContent());
+            }
+            catch (FormatException)
+            {
+                return SetResponse(HttpStatusCode.BadRequest, new ErrorView("Oups, position should be a valid number character.").AsHtmlContent());
+            }   
+            if (!validParams(list, pos) || !(_repo.MoveCard(bid,lid,cid,list,position)))
+            {
+                return SetResponse(HttpStatusCode.BadRequest, new ErrorView("Oups, some information is missing").AsHtmlContent());
+            }
+
+            return SetResponse(HttpStatusCode.SeeOther, ResolveUri.SingleCardUri(bid, cid));
         }
 
         //REMOVE EMPTY LIST
         [HttpMethod("GET", "/remove/boards/{bid}/lists/{lid}")]
         public HttpResponseMessage Remove(string bid, string lid)
         {
-            if(_repo.ContainsBoard(bid) && _repo.ContainsList(bid,lid) && !(_repo.GetListById(bid,lid).GetAllCards().Any()))
-                return SetResponse(HttpStatusCode.SeeOther,ResolveUri.SingleBoardUri(bid));
+            if (_repo.ContainsBoard(bid) && _repo.ContainsList(bid, lid) && !(_repo.GetListById(bid, lid).GetAllCards().Cast<Card>().Any()))
+            {
+                _repo.GetBoardById(bid).RemoveList(lid);
+                return SetResponse(HttpStatusCode.SeeOther, ResolveUri.SingleBoardUri(bid));
+            }
             return SetResponse(HttpStatusCode.BadRequest, new ErrorView("Oups, sorry but you cant remove that list. Try to archive all cards firt.").AsHtmlContent());
         }
 
@@ -246,7 +279,7 @@ namespace TrelloApp.Controllers
             {
                 return SetResponse(HttpStatusCode.BadRequest, new ErrorView("Oups, some information is missing").AsHtmlContent());
             }
-            if(_repo.GetBoardById(bid).AddCard(id, desc, date, lid)){
+            if(!_repo.GetBoardById(bid).AddCard(id, desc, date, lid,bid)){
                 return SetResponse(HttpStatusCode.BadRequest, new ErrorView("Oups, that card already exists.").AsHtmlContent());
             }
 

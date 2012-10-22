@@ -1,42 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Specialized;
+using System.Collections;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace TrelloApp.Models
 {
     class Board : Element
     {
-        private readonly IDictionary<string, List> lists = new Dictionary<string, List>();
-        private readonly IDictionary<string, Card> cards = new Dictionary<string, Card>();
+        private readonly IOrderedDictionary lists = new OrderedDictionary();
+        private readonly IOrderedDictionary cards = new OrderedDictionary();
 
-        public IEnumerable<List> GetAllLists()
+        public ICollection GetAllLists()
         {
             return lists.Values;
         }
 
-        public bool RemoveCard(string cid)
+        public bool RemoveCard(string cid, string lid)
         {
-            return cards.Remove(cid);
+           if(cid == null || lid == null)
+               return false;
+           cards.Remove(cid);
+           return GetListById(lid).RemoveCard(cid);
+        }
+
+        public void RemoveList(string lid)
+        {
+
+            lists.Remove(lid);
         }
 
         public bool AddList(string lid, string desc)
         {
-            if (lists.ContainsKey(lid))
+            if (lists.Contains(lid))
                 return false;
             else
                 lists.Add(lid,new List(lid, desc));
             return true;
         }
 
-        public bool AddCard(string cid, string desc, string date, string lid)
+        public bool AddCard(string cid, string desc, string date, string lid, string bid)
         {
-            if (cards.ContainsKey(cid))
+            if (cards.Contains(cid))
                 return false;
             Card c = new Card(cid, desc);
             c.creationDate = DateTime.Today;
             c.dueDate = DateTime.Parse(date + " 00:00:00");
+            c.boardContainer = bid;
             c.listContainer = lid;
             cards.Add(c.Id, c);
             return AddCardToList(c, lid);
@@ -50,19 +60,15 @@ namespace TrelloApp.Models
 
         public List GetListById(string lid)
         {
-            List l = null;
-            lists.TryGetValue(lid, out l);
-            return l;
+            return lists[lid] as List;
         }
 
         public Card GetCardById(string cid)
         {
-            Card c = null;
-            cards.TryGetValue(cid, out c);
-            return c;
+            return cards[cid] as Card;
         }
 
-        public IEnumerable<Card> GetAllCards()
+        public ICollection GetAllCards()
         {
             return cards.Values;
         }

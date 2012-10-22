@@ -1,44 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Specialized;
+using System.Collections;
 using System;
 
 namespace TrelloApp.Models
 {
     class ElementMemoryRepository : IElementRepository
     {
-        private readonly IDictionary<string, Board> _repo = new Dictionary<string, Board>();
-        private readonly IDictionary<string, Card> _archive = new Dictionary<string, Card>();
+        private readonly IOrderedDictionary _repo = new OrderedDictionary();
+        private readonly IOrderedDictionary _archive = new OrderedDictionary();
 
-        public IEnumerable<Board> GetAll()
+        public ICollection GetAll()
         {
             return _repo.Values;
         }
 
-        public IEnumerable<Card> GetArchivedCards()
+        public ICollection GetArchivedCards()
         {
             return _archive.Values;
         }
 
         public Board GetBoardById(string id)
         {
-            Board td = null;
-            _repo.TryGetValue(id, out td);
-            return td;
+            return _repo[id] as Board;
         }
 
         public List GetListById(string bid, string lid)
         {
-            Board board = null;
-            if(_repo.TryGetValue(bid, out board))
-                return board.GetListById(lid);
-            return null;
+            Board board = _repo[bid] as Board;
+            return board == null ? null : board.GetListById(lid);
         }
 
         public Card GetCardById(string bid, string cid)
         {
-            Board board = null;
-            if( _repo.TryGetValue(bid, out board))
-                return board.GetCardById(cid);
-            return null;
+            Card c = _archive[bid + "_" + cid] as Card;
+            if(c != null)
+                return c;
+            Board board = _repo[bid] as Board;
+            return board == null ? null : board.GetCardById(cid);
         }
 
         public bool UpdateCard(string bid, string lid, string cid, string desc, string date)
@@ -71,7 +69,7 @@ namespace TrelloApp.Models
 
         public bool ContainsBoard(string bid)
         {
-            return _repo.ContainsKey(bid);
+            return _repo.Contains(bid);
         }
 
         public bool ContainsList(string bid, string lid)
@@ -92,17 +90,15 @@ namespace TrelloApp.Models
 
         public bool ArchiveCard(string bid, string cid)
         {
-            Board board = null;
-            _repo.TryGetValue(bid, out board);
+            Board board = _repo[bid] as Board;
             if (board != null)
             {
                 Card c = board.GetCardById(cid);
                 if (c != null)
                 {
                     _archive.Add(bid + "_" + c.Id, c);
-                    c.listContainer = null;
-                    c.boardContainer = null;
-                    return board.RemoveCard(cid);
+                    c.archived = true;
+                    return board.RemoveCard(cid,c.listContainer);
                 }
             }
             return false;
@@ -110,10 +106,18 @@ namespace TrelloApp.Models
 
         public Card GetArchivedCardById(string id)
         {
-            Card c = null;
-            _archive.TryGetValue(id, out c);
-            return c;
+            return _archive[id] as Card;
         }
 
+        public bool MoveCard(string bid, string lid, string cid, string destLid, int position)
+        {
+            List l = (_repo[bid] as Board).GetListById(lid);
+            List dl = (_repo[bid] as Board).GetListById(destLid);
+            if (l == null || dl == null)
+                return false;
+            Card c = (_repo[bid] as Board).GetCardById(cid);
+            return lid == destLid ? l.MoveInternalCard(c, position) : (l.RemoveCard(cid) && dl.AddCardToPosition(c, position));
+        }
+            
     }
 }

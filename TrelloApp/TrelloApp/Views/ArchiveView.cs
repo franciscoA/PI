@@ -13,7 +13,7 @@ namespace TrelloApp.Views
             : base("TrelloApp",
             H1(Text("Archived Cards")),
             Ul(
-                enumCards.Select(card => Li(A(ResolveUri.SingleCardUri(card.boardContainer, card.Id), card.Id))).ToArray()
+                enumCards.Select(card => Li(A(ResolveUri.SingleCardUri(card.boardContainer, card.Id), "board: "+card.boardContainer+"|| card: "+card.Id))).ToArray()
             )
 
             ) { }

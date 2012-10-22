@@ -25,12 +25,12 @@ namespace TrelloApp.Views
 
          private static IEnumerable<IWritable> AllCardsByLists(Board b)
          {
-             IEnumerable<List> lists = b.GetAllLists();
+             IEnumerable<List> lists = b.GetAllLists().Cast<List>();
              foreach (List l in lists)
              {
                  yield return Li(A(ResolveUri.SingleListUri(b, l), l.Id));
                  yield return Ul(
-                   l.GetAllCards().Select(td => Li(A(ResolveUri.SingleCardUri(b.Id, td.Id), td.Id))).ToArray()
+                   l.GetAllCards().Cast<Card>().Select(td => Li(A(ResolveUri.SingleCardUri(b.Id, td.Id), td.Id))).ToArray()
                  );
              }
          }

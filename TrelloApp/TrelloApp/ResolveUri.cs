@@ -91,9 +91,9 @@ namespace TrelloApp
 
         public const string Archive ="http://localhost:8080/archive";
 
-        public static string Archived(string b, string l, string c)
+        public static string Archived(string b, string c)
         {
-            return string.Format("http://localhost:8080/archive/boards/{0}/list/{1}/cards/{2}", b, l, c);
+            return string.Format("http://localhost:8080/archive/boards/{0}/cards/{1}", b, c);
         }
 
         //REMOVE

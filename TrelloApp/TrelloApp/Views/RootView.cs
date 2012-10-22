@@ -7,7 +7,8 @@ namespace TrelloApp.Views
          public RootView()
             : base("TrelloApp",
                H1(Text("Welcome")),
-               A(ResolveUri.AllBoardsUri,"Boards")
+               Li(A(ResolveUri.AllBoardsUri,"Boards")),
+               Li(A(ResolveUri.Archive, "Archive"))
                ) { }
     }
 }
